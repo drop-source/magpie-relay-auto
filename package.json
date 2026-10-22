@@ -1,0 +1,26 @@
+{
+  "name": "magpie-relay-auto",
+  "version": "0.3.0",
+  "description": "magpie 通用供应商插件：接入任意 OpenAI 兼容中转站，自动补全模型的上下文窗口",
+  "type": "module",
+  "main": "./index.mjs",
+  "files": ["index.mjs", "README.md", "page"],
+  "keywords": ["opencode", "opencode-plugin", "magpie", "magpie-page", "relay"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/drop-source/magpie-relay-auto.git"
+  },
+  "homepage": "https://github.com/drop-source/magpie-relay-auto#readme",
+  "bugs": {
+    "url": "https://github.com/drop-source/magpie-relay-auto/issues"
+  },
+  "magpie": {
+    "page": {
+      "file": "page/index.html",
+      "icon": "page/icon.svg",
+      "title": "Relay rules",
+      "titles": { "zh": "中转规则", "en": "Relay rules" }
+    }
+  }
+}

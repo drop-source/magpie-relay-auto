@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>中转规则</title>
+<link rel="stylesheet" href="style.css">
+<script src="_magpie/bridge.js"></script>
+<script src="app.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <div class="titles">
+      <h1>中转规则</h1>
+      <p class="sub">模型名剥掉前缀、后缀后到 models.dev 匹配，自动补全上下文窗口</p>
+    </div>
+    <div class="actions">
+      <span class="dirty" id="dirty" hidden>未保存</span>
+      <button type="button" id="save" class="btn primary" disabled>保存并生效</button>
+    </div>
+  </header>
+
+  <div class="grid2">
+    <section class="card">
+      <div class="card-head">
+        <h2>前缀</h2>
+        <span class="count" id="prefixCount">0</span>
+      </div>
+      <p class="hint">剥掉模型名开头的 <code>[xxx]</code></p>
+      <div class="chips" id="prefixChips"></div>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <h2>后缀</h2>
+        <span class="count" id="suffixCount">0</span>
+      </div>
+      <p class="hint">剥掉结尾的 <code>-xxx</code>，支持正则片段</p>
+      <div class="chips" id="suffixChips"></div>
+    </section>
+  </div>
+
+  <section class="card">
+    <div class="card-head">
+      <h2>别名映射</h2>
+      <span class="count" id="aliasCount">0</span>
+    </div>
+    <p class="hint">把中转站的模型名对应到 models.dev 的标准名，用于拼写不一致的模型</p>
+    <div class="cols-head" aria-hidden="true">
+      <span>中转站模型名</span>
+      <span class="arrow-col"></span>
+      <span>标准模型名</span>
+      <span class="del-col"></span>
+    </div>
+    <div class="rows" id="aliasRows"></div>
+    <button type="button" class="btn ghost wide" id="addAlias">添加映射</button>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <h2>免费标记</h2>
+    </div>
+    <p class="hint">带此前缀的模型标记为免费，不占额度</p>
+    <div class="freetag">
+      <span class="bracket">[</span>
+      <input id="freeTag" class="field" placeholder="free" spellcheck="false" aria-label="免费标记前缀">
+      <span class="bracket">]</span>
+    </div>
+  </section>
+
+  <footer class="status">
+    <p class="msg error" id="error" hidden></p>
+    <p class="msg ok" id="ok" hidden>已保存，插件将按新规则重新匹配模型</p>
+  </footer>
+</div>
+</body>
+</html>
