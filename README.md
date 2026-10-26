@@ -26,27 +26,10 @@ magpie plugin add magpie-relay-auto
 magpie plugin add ./magpie-relay-auto
 ```
 
-默认配置就是 Nova 中转站（`once-cf.novai.su`），装上直接可用：
-
-```bash
-magpie plugin login nova
-magpie provider test nova
-```
-
-如果 magpie 里已经有同名的自定义供应商，插件的供应商会变成 `nova-plugin`。
-建议先移除手动添加的那个，让插件接管这个 id：
-
-```bash
-magpie provider rm nova
-```
-
-## 接入其他中转站
-
-用 `plugin options` 改配置，`id` 和 `api` 必填，`name` 可选：
+插件没有默认目标，装上后先配置自己的中转站（`id` 和 `api` 必填，`name` 可选）：
 
 ```bash
 magpie plugin options magpie-relay-auto '{"id":"myrelay","name":"我的中转","api":"https://example.com/v1"}'
-magpie plugin login myrelay
 magpie provider test myrelay
 ```
 
@@ -84,7 +67,7 @@ magpie plugin on magpie-relay-auto
 
 ## 登录信息
 
-API key 保存在 `~/.config/magpie/plugin-auth.json`（权限 600），不会上传到任何地方。
+本插件不涉及登录，不保存任何密钥。API key 由 magpie 自身的供应商配置管理。
 
 ## 许可
 

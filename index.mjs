@@ -1,11 +1,11 @@
 // magpie provider plugin: any OpenAI-compatible relay with auto-filled context limits.
 // Configure per relay via `magpie plugin options <plugin> '{"id":"myrelay","name":"My Relay","api":"https://host/v1"}'`.
-// Pulls /v1/models, strips relay prefixes like [free]/[ant]/[次],
+// Pulls /v1/models (no login/auth), strips relay prefixes like [free]/[ant]/[次],
 // and fills in context/output limits from models.dev by standard model name.
 
 const MODELS_DEV = "https://models.dev/api.json"
 
-// defaults: the nova relay this plugin was originally built for.
+// defaults: a placeholder relay; override everything with plugin options.
 // Override everything with plugin options; only `id` and `api` are required.
 // All matching rules are configurable so new relay formats need no code change:
 //   prefixes:  regex sources stripped from the start of a model id
@@ -13,9 +13,9 @@ const MODELS_DEV = "https://models.dev/api.json"
 //   aliases:   { "relay-model-id": "models.dev-model-id" } exact overrides
 //   freeTag:   prefix regex marking a model as free (default [free])
 const DEFAULTS = {
-  id: "nova",
-  name: "Nova",
-  api: "https://once-cf.novai.su/v1",
+  id: "myrelay",
+  name: "My Relay",
+  api: "https://example.com/v1",
   prefixes: ["free", "ant", "次", "pro", "plus", "test", "beta", "stable", "限时"],
   suffixes: ["thinking", "latest", "preview", "\\d{4}-\\d{2}(-\\d{2})?"],
   aliases: {},
@@ -87,32 +87,10 @@ export const RelayAutoPlugin = async ({ client, options = {} }) => {
       }
     },
 
-    auth: {
-      provider: PROVIDER,
-      methods: [{ type: "api", label: `${cfg.name ?? PROVIDER} API key`, placeholder: "sk-…" }],
-      async loader(getAuth) {
-        const auth = await getAuth()
-        if (auth?.type !== "api") return {}
-        const key = auth.key ?? auth.apiKey ?? auth.token
-        return {
-          baseURL: BASE,
-          async fetch(input, init) {
-            const headers = new Headers(init?.headers)
-            headers.set("authorization", `Bearer ${key}`)
-            return fetch(input, { ...init, headers })
-          },
-        }
-      },
-    },
-
     provider: {
       id: PROVIDER,
-      async models(provider, { auth } = {}) {
-        if (auth?.type !== "api") return provider.models
-        const key = auth.key ?? auth.apiKey ?? auth.token
-        const res = await fetch(`${BASE}/models`, {
-          headers: { authorization: `Bearer ${key}` },
-        })
+      async models(provider) {
+        const res = await fetch(`${BASE}/models`)
         if (!res.ok) return provider.models // keep the old list on failure
         const { data } = await res.json()
         if (!Array.isArray(data)) return provider.models
